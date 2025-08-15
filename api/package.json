@@ -6,7 +6,9 @@
     "prebuild": "rimraf dist",
     "build": "nest build",
     "start:dev": "nest start --watch",
-    "start": "node dist/main.js"
+    "start": "node dist/main.js",
+    "typeorm": "typeorm-ts-node-commonjs -d src/db/data-source.ts",
+    "migration:run": "npm run typeorm -- migration:run"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.9.13",

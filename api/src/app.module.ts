@@ -46,8 +46,8 @@ export const AppModeModulesMap = {
       useFactory: (cfg: ConfigService) => ({
         type: 'postgres',
         url: cfg.get<string>('DATABASE_URL'),
-        autoLoadEntities: true,
-        synchronize: true, // toggle off in production
+        // autoLoadEntities: true,
+        synchronize: false,
       }),
     }),
     ...(AppModeModulesMap[appMode] ?
