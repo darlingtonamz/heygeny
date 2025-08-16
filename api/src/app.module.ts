@@ -9,6 +9,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { GrpcModule } from './grpc/grpc.module';
+import { BookingsModule } from './bookings/bookings.module';
 
 const appMode = process.env.APP_MODE
 
@@ -35,6 +36,7 @@ export const AppModeModulesMap = {
         signOptions: { expiresIn: cfg.get<string>('JWT_EXPIRES_IN', '1d') },
       }),
     }),
+    BookingsModule,
   ]
 }
 
@@ -54,6 +56,6 @@ export const AppModeModulesMap = {
       AppModeModulesMap[appMode] : AppModeModulesMap.HTTP),
   ],
   controllers: [AppController],
-    providers: [AppService],
+  providers: [AppService],
 })
 export class AppModule { }

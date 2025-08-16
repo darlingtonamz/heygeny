@@ -1,0 +1,35 @@
+import { type BookingEntity } from "src/bookings/booking.entity";
+import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
+
+@Entity('users')
+export class UserEntity {
+  @Column({type: 'uuid'})
+  public id: string;
+
+  @Column({type: 'text'})
+  public email: string;
+
+  @Column({type: 'text'})
+  public password: string;
+
+  @Column({type: 'text'})
+  public firstName: Date;
+
+  @Column({type: 'text'})
+  public lastName: Date;
+
+  @Column({type: 'text', nullable: true})
+  public phone: string;
+
+  @Column({type: 'boolean', nullable: true})
+  public isActive: boolean;
+
+  @Column({type: 'timestamp with time zone'})
+  public createdAt: Date;
+
+  @Column({type: 'timestamp with time zone'})
+  public updatedAt: Date;
+
+  @OneToMany('BookingEntity', (booking: BookingEntity) => booking.user)
+  public bookings: BookingEntity[];
+}
