@@ -50,6 +50,7 @@ export const AppModeModulesMap = {
         url: cfg.get<string>('DATABASE_URL'),
         // autoLoadEntities: true,
         synchronize: false,
+        entities: [`${__dirname}/**/*.entity{.ts,.js}`],
       }),
     }),
     ...(AppModeModulesMap[appMode] ?

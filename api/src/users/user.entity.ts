@@ -1,9 +1,9 @@
-import { type BookingEntity } from "src/bookings/booking.entity";
-import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
+import { type BookingEntity } from "../bookings/booking.entity";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('users')
 export class UserEntity {
-  @Column({type: 'uuid'})
+  @PrimaryGeneratedColumn('uuid')
   public id: string;
 
   @Column({type: 'text'})

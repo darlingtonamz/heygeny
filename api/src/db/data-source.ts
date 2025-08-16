@@ -11,7 +11,9 @@ export default new DataSource({
 //   password: process.env.POSTGRES_PASSWORD || 'postgres',
 //   database: process.env.POSTGRES_DB || 'test_db',
   url: process.env.DATABASE_URL,
-  entities: [__dirname + '/src/**/*.entity{.ts,.js}'],
-  migrations: [__dirname + '/migrations/*{.ts,.js}'],
+  // entities: [__dirname + '/src/**/*.entity{.ts,.js}'],
+  entities: [`${__dirname}/../**/*.entity{.ts,.js}`],
+  // migrations: [__dirname + '/migrations/*{.ts,.js}'],
+  migrations: [`${__dirname}/../../migrations/*{.ts,.js}`],
   synchronize: false,
 });

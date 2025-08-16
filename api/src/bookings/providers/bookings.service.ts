@@ -1,5 +1,5 @@
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { Not, Repository } from "typeorm";
 import { BookingEntity } from "../booking.entity";
 import { Injectable } from "@nestjs/common";
 
@@ -13,7 +13,7 @@ export class BookingsService {
   }
 
   public async getBookings() {
-    return this.repo.find();
+    return this.repo.find({ where: { id: Not(null) } });
   }
 
   public async getOneBooking() {
