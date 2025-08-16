@@ -29,5 +29,5 @@ export class CreateBookingDTO {
 
   @IsOptional()
   @IsNumber()
-  public totalAmount: string;
+  public totalAmount: number;
 }

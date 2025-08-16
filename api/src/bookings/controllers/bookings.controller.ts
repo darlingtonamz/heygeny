@@ -1,7 +1,11 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { BookingsService } from "../providers/bookings.service";
 import { DTOValidationPipe } from "src/common/pipes/dtovalidation.pipe";
 import { CreateBookingDTO } from "../dtos/space.dto";
+import { UserEntity } from "src/users/user.entity";
+
+const test_user = new UserEntity();
+test_user.id = '27229aac-e0b3-4e08-8b9f-c7bcf846ed6c';
 
 @Controller("/bookings")
 export class BookingsController {
@@ -11,18 +15,20 @@ export class BookingsController {
 
   @Get()
   getMany() {
-    return this.service.getBookings();
+    return this.service.getBookings(test_user);
   }
 
   @Get(':id')
-  getOne() {
-    return this.service.getOneBooking();
+  getOne(
+    @Param('id') id: string,
+  ) {
+    return this.service.getOneBooking(id);
   }
 
   @Post()
   createOne(
     @Body(new DTOValidationPipe(CreateBookingDTO)) body: CreateBookingDTO,
   ) {
-    return this.service.createOne();
+    return this.service.createOne(test_user, body);
   }
 }
