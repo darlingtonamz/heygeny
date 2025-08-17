@@ -24,3 +24,12 @@ $host> docker exec -it nestjs-stack_api
 ```
 > docker compose up
 ```
+
+# TESTS
+```bash
+# spin up test DB
+docker-compose -f docker-compose.test.yml up -d
+
+# then
+npm run test:e2e
+```

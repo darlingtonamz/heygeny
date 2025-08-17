@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { BookingsService } from "../providers/bookings.service";
-import { DTOValidationPipe } from "src/common/pipes/dtovalidation.pipe";
+import { DTOValidationPipe } from "../../common/pipes/dtovalidation.pipe";
 import { CreateBookingDTO } from "../dtos/space.dto";
-import { UserEntity } from "src/users/user.entity";
+import { UserEntity } from "../../users/user.entity";
 
 const test_user = new UserEntity();
 test_user.id = '27229aac-e0b3-4e08-8b9f-c7bcf846ed6c';
