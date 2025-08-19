@@ -2,14 +2,14 @@
 import {Test, TestingModule} from '@nestjs/testing';
 import {INestApplication} from '@nestjs/common';
 import {AppModule} from '../src/app.module';
-import { DataSource } from 'typeorm';
+import { Connection, DataSource } from 'typeorm';
 
 process.env.DATABASE_URL = process.env.TEST_DATABASE_URL || 'postgresql://test_user:test_pass@0.0.0.0:5434/test_db'
 const datasource = new DataSource({
   type: 'postgres',
   url: process.env.DATABASE_URL,
-  entities: [`${__dirname}/../**/*.entity{.ts,.js}`],
-  migrations: [`${__dirname}/../../migrations/*{.ts,.js}`],
+  entities: [`${__dirname}/**/*.entity{.ts,.js}`],
+  migrations: [`${__dirname}/../migrations/*{.ts,.js}`],
   synchronize: false,
 });
 
@@ -39,6 +39,7 @@ export const buildTestApp = async () => {
     imports: [AppModule],
   }).compile();
 
+  const connection = moduleFixture.get(Connection);
   app = moduleFixture.createNestApplication();
   await app.init();
   return app;

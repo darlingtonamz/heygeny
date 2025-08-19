@@ -1,4 +1,5 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
+import * as bcrypt from 'bcrypt';
 
 export class Initial1755345540368 implements MigrationInterface {
   async up (queryRunner: QueryRunner): Promise<void> {
@@ -8,7 +9,7 @@ export class Initial1755345540368 implements MigrationInterface {
       CREATE TABLE "users" (
           "id" uuid DEFAULT public.uuid_generate_v4() NOT NULL,
           "email" VARCHAR(255) UNIQUE NOT NULL,
-          "password" VARCHAR(255) NOT NULL,
+          "passwordHash" VARCHAR(255) NOT NULL,
           "firstName" VARCHAR(100) NOT NULL,
           "lastName" VARCHAR(100) NOT NULL,
           "phone" VARCHAR(20),
@@ -66,6 +67,17 @@ export class Initial1755345540368 implements MigrationInterface {
       ('admin', 'Administrator with full access'),
       ('provider', 'Regular user with limited access')
     `);
+
+    // Insert default users
+    const passwordHash = await bcrypt.hash('changeme', 10)
+    await queryRunner.query(`
+      INSERT INTO "users" ("email", "passwordHash", "firstName", "lastName", "phone") VALUES
+      ($1, $2, $3, $4, $5)
+    `, [
+      'amanze@example.com', 
+      passwordHash,
+      'Amanze', 'Ogbonna', '555-555-5555'
+    ]);
   };
 
   async down (queryRunner: QueryRunner): Promise<void> {

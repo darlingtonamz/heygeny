@@ -31,5 +31,6 @@ $host> docker exec -it nestjs-stack_api
 docker-compose -f docker-compose.test.yml up -d
 
 # then
+cd api
 npm run test:e2e
 ```

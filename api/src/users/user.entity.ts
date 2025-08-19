@@ -10,7 +10,7 @@ export class UserEntity {
   public email: string;
 
   @Column({type: 'text'})
-  public password: string;
+  public passwordHash: string;
 
   @Column({type: 'text'})
   public firstName: Date;

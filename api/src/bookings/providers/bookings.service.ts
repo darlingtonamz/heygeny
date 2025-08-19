@@ -1,9 +1,9 @@
 import { InjectRepository } from "@nestjs/typeorm";
 import { Not, Repository } from "typeorm";
 import { BookingEntity } from "../booking.entity";
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { UserEntity } from "src/users/user.entity";
-import { CreateBookingDTO } from "../dtos/space.dto";
+import { CreateBookingDTO } from "../dtos/booking.dto";
 
 export type GetManyDefaultResponse<T> = {
   data: T[];
@@ -24,13 +24,14 @@ export class BookingsService {
 
   public async getBookings(user: UserEntity, page: number = 1, limit: number = 10) {
     const offset = (page - 1) * limit;
-    const [{count}] = await this.repo.query(`SELECT COUNT(*) 
+    let [{count}] = await this.repo.query(`SELECT COUNT(*) 
       FROM "bookings"
       WHERE "userId" = $1
       OFFSET $2
       LIMIT $3`, [user.id, offset, limit]);
+    count = Number(count);
     const fetchedBookings = await this.repo.find({
-      where: { id: Not(null) },
+      where: { userId: user.id },
       take: limit,
       skip: offset,
     });
@@ -43,8 +44,9 @@ export class BookingsService {
     }
   }
 
-  public async getOneBooking(id: string) {
-    const booking = await this.repo.find({ where: { id } })
+  public async getOneBooking(user: UserEntity, id: string) {
+    const booking = await this.repo.findOne({ where: { userId: user.id, id } });
+    if (!booking) throw new NotFoundException('Booking not found');
     return booking;
   }
 

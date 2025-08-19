@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CacheModule } from '@nestjs/cache-manager';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { redisStore } from 'cache-manager-ioredis-yet';
 import { AppController } from './app.controller';
@@ -10,6 +10,8 @@ import { AppService } from './app.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { GrpcModule } from './grpc/grpc.module';
 import { BookingsModule } from './bookings/bookings.module';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 const appMode = process.env.APP_MODE
 
@@ -28,15 +30,8 @@ export const AppModeModulesMap = {
     //     }),
     //   }),
     // }),
-    JwtModule.registerAsync({
-      global: true,
-      inject: [ConfigService],
-      useFactory: (cfg: ConfigService) => ({
-        secret: cfg.get<string>('JWT_SECRET', 'changeme'),
-        signOptions: { expiresIn: cfg.get<string>('JWT_EXPIRES_IN', '1d') },
-      }),
-    }),
     BookingsModule,
+    UsersModule,
   ]
 }
 
@@ -53,6 +48,16 @@ export const AppModeModulesMap = {
         entities: [`${__dirname}/**/*.entity{.ts,.js}`],
       }),
     }),
+    JwtModule.registerAsync({
+      global: true,
+      inject: [ConfigService],
+      useFactory: (cfg: ConfigService) => ({
+        secret: cfg.get<string>('JWT_SECRET', 'changeme'),
+        signOptions: { expiresIn: cfg.get<string>('JWT_EXPIRES_IN', '1d') },
+      }),
+    }),
+    {module: AuthModule, global: true},
+    // AuthModule,
     ...(AppModeModulesMap[appMode] ?
       AppModeModulesMap[appMode] : AppModeModulesMap.HTTP),
   ],
