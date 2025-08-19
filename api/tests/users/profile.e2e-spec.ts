@@ -19,7 +19,7 @@ describe('ProfileController (e2e)', () => {
   });
 
   describe('GET /profile', () => {
-    it('should fetch paginated bookings', async () => {
+    it('should fetch user profile properly', async () => {
       let accessToken = (await request(app.getHttpServer())
         .post('/auth/login')
         .send({

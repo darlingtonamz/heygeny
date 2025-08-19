@@ -21,8 +21,8 @@ describe('UsersController (e2e)', () => {
     await app.close();
   });
 
-  describe('GET /auth/login', () => {
-    it('should fetch paginated bookings', async () => {
+  describe('POST /auth/login', () => {
+    it('should login properly', async () => {
       const { body: res } = await request(app.getHttpServer())
         .post('/auth/login')
         .send({
@@ -37,6 +37,52 @@ describe('UsersController (e2e)', () => {
       expect(JSON.parse(headers)).toEqual({"alg":"HS256","typ":"JWT"});
       expect(JSON.parse(payload).email).toEqual("amanze@example.com");
       expect(signature).toBeDefined();
+    });
+
+    it('should not login properly | with incorrect password', async () => {
+      const { body: res } = await request(app.getHttpServer())
+        .post('/auth/login')
+        .send({
+            "email": "amanze@example.com",
+            "password": "bad_password"
+        })
+        .expect(401);
+    });
+  });
+
+  describe('POST /auth/register', () => {
+    it('should create a new user and login', async () => {
+      const { body: res } = await request(app.getHttpServer())
+        .post('/auth/register')
+        .send({
+            "email": "amanze2@example.com",
+            "password": "changeme",
+            "firstName": 'Amanze',
+            "lastName": 'Ogbonna',
+            "phone": '555-555-5555'
+        })
+        .expect(201);
+
+        await request(app.getHttpServer())
+        .post('/auth/login')
+        .send({
+            "email": "amanze2@example.com",
+            "password": "changeme"
+        })
+        .expect(201);
+    });
+
+    it('should not create a new user with faulty email', async () => {
+      const { body: res } = await request(app.getHttpServer())
+        .post('/auth/register')
+        .send({
+            "email": "invalid_email",
+            "password": "changeme",
+            "firstName": 'Amanze',
+            "lastName": 'Ogbonna',
+            "phone": '555-555-5555'
+        })
+        .expect(400);
     });
   });
 });
