@@ -3,6 +3,7 @@ import {Test, TestingModule} from '@nestjs/testing';
 import {INestApplication} from '@nestjs/common';
 import {AppModule} from '../src/app.module';
 import { Connection, DataSource } from 'typeorm';
+import { UserEntity } from '../src/users/user.entity';
 
 process.env.DATABASE_URL = process.env.TEST_DATABASE_URL || 'postgresql://test_user:test_pass@0.0.0.0:5434/test_db'
 const datasource = new DataSource({
@@ -43,4 +44,37 @@ export const buildTestApp = async () => {
   app = moduleFixture.createNestApplication();
   await app.init();
   return app;
+}
+
+function generateRandomAlphanumeric(length: number): string {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return result;
+}
+
+export const createTestUser = async (agent): Promise<{ user: Partial<UserEntity>, accessToken: string }> => {
+  const email = `${generateRandomAlphanumeric(10)}@example.com`;
+  const { body: user } = await agent
+    .post('/auth/register')
+    .send({
+        email,
+        "password": "changeme",
+        "firstName": 'Amanze',
+        "lastName": 'Ogbonna',
+        "phone": '555-555-5555'
+    })
+    .expect(201);
+
+  const accessToken = (await agent
+    .post('/auth/login')
+    .send({
+        email,
+        "password": "changeme"
+    })
+    .expect(201)).body.access_token;
+
+    return {user, accessToken}
 }

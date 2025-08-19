@@ -24,6 +24,28 @@ $host> docker exec -it nestjs-stack_api
 ```
 > docker compose up
 ```
+## Using the app
+- Get access_token with existing (seeded) user
+```
+# Over HTTP
+POST /auth/login
+{
+    "email": "amanze@example.com",
+    "password": "changeme"
+}
+```
+- Or create a new User
+```
+# Over HTTP
+POST /auth/register
+{
+    "email": "someone-else@example.com",
+    "password": "changeme",
+    "firstName": 'Human',
+    "lastName": 'Being',
+    "phone": '555-555-5555'
+}
+```
 
 # TESTS
 ```bash

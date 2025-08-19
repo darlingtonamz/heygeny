@@ -52,7 +52,7 @@ describe('UsersController (e2e)', () => {
 
   describe('POST /auth/register', () => {
     it('should create a new user and login', async () => {
-      const { body: res } = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .post('/auth/register')
         .send({
             "email": "amanze2@example.com",
@@ -73,7 +73,7 @@ describe('UsersController (e2e)', () => {
     });
 
     it('should not create a new user with faulty email', async () => {
-      const { body: res } = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .post('/auth/register')
         .send({
             "email": "invalid_email",

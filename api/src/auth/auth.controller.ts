@@ -9,7 +9,6 @@ export class AuthController {
 
   @Post('login')
   async login(
-    // @Body() body: { email: string; password: string }
     @Body(new DTOValidationPipe(LoginDTO)) body: LoginDTO,
   ) {
     const user = await this.authService.validateUser(body.email, body.password);
@@ -21,7 +20,6 @@ export class AuthController {
 
   @Post('register')
   async register(
-    // @Body() body: { email: string; password: string }
     @Body(new DTOValidationPipe(RegisterDTO)) body: RegisterDTO,
 ) {
     return this.authService.register(body);

@@ -19,7 +19,9 @@ export class UsersService {
     return user;
   }
 
-  public async createUser(user: RegisterDTO & {passwordHash: string}) {
-    return this.repo.save(this.repo.merge(new UserEntity(), user));
+  public async createUser(payload: RegisterDTO & {passwordHash: string}) {
+    const createdUser = await this.repo.save(this.repo.merge(new UserEntity(), payload));
+    const { passwordHash, ...user } = createdUser;
+    return user;
   }
 }

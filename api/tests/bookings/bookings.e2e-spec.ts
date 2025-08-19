@@ -1,9 +1,10 @@
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { buildTestApp } from '../test_common';
+import { buildTestApp, createTestUser } from '../test_common';
 import { Connection, Repository } from 'typeorm';
 
 import {v4 as uuid4} from "uuid";
+import { UserEntity } from '../../src/users/user.entity';
 
 describe('BookingController (e2e)', () => {
   let app: INestApplication;
@@ -58,17 +59,14 @@ describe('BookingController (e2e)', () => {
     const bookingId1 = uuid4();
     const bookingId2 = uuid4();
     const bookingId3 = uuid4();
-    const userIdX = uuid4();
+    let userX: { user: Partial<UserEntity>, accessToken: string };
 
     beforeAll(async () => {
-      await connection.query(`
-        INSERT INTO "users" ("id", "email", "passwordHash", "firstName", "lastName", "phone") VALUES
-        ($1, $2, $3, $4, $5, $6)
-      `, [userIdX, 'xasass@example.com', '$2b$10$Aq9v1Hc6e2D1l7Xb8Qc7E1d2f3g4h5i6j7k8l9m0', 'John', 'Doe', '555-555-5555']);
+      userX = await createTestUser(request(app.getHttpServer()));
 
       await connection.query(`INSERT INTO "bookings" ("id", "userId", "serviceType", "bookingDate")
           VALUES ($1, $2, $3, $4), ($5, $6, $7, $8), ($9, $10, $11, $12)`,
-          [bookingId1, userId, 'test', '2022-01-01', bookingId2, userId, 'test', '2022-01-01', bookingId3, userIdX, 'test', '2022-01-01'],
+          [bookingId1, userId, 'test', '2022-01-01', bookingId2, userId, 'test', '2022-01-01', bookingId3, userX.user.id, 'test', '2022-01-01'],
       );
     });
 
@@ -99,17 +97,14 @@ describe('BookingController (e2e)', () => {
     const bookingId1 = uuid4();
     const bookingId2 = uuid4();
     const bookingId3 = uuid4();
-    const userIdX = uuid4();
+    let userX: { user: Partial<UserEntity>, accessToken: string };
 
     beforeAll(async () => {
-      await connection.query(`
-        INSERT INTO "users" ("id", "email", "passwordHash", "firstName", "lastName", "phone") VALUES
-        ($1, $2, $3, $4, $5, $6)
-      `, [userIdX, 'weweee@example.com', '$2b$10$Aq9v1Hc6e2D1l7Xb8Qc7E1d2f3g4h5i6j7k8l9m0', 'John', 'Doe', '555-555-5555']);
+      userX = await createTestUser(request(app.getHttpServer()));
 
       await connection.query(`INSERT INTO "bookings" ("id", "userId", "serviceType", "bookingDate")
           VALUES ($1, $2, $3, $4), ($5, $6, $7, $8), ($9, $10, $11, $12)`,
-          [bookingId1, userId, 'test', '2022-01-01', bookingId2, userId, 'test', '2022-01-01', bookingId3, userIdX, 'test', '2022-01-01'],
+          [bookingId1, userId, 'test', '2022-01-01', bookingId2, userId, 'test', '2022-01-01', bookingId3, userX.user.id, 'test', '2022-01-01'],
       );
     });
 
